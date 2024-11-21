@@ -60,40 +60,19 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const newErrors = {};
-    Object.keys(form).forEach((key) => validateField(key, form[key]));
-
-    if (Object.values(errors).some((error) => error)) {
-      setSnackbar({
-        open: true,
-        message: "Por favor corrige los errores antes de continuar.",
-        type: "error",
-      });
-      return;
-    }
-
-    setLoading(true); 
+    setLoading(true);
     try {
-      const response = await api.post("/login", form);
-      setSnackbar({
-        open: true,
-        message: "Inicio de sesión exitoso.",
-        type: "success",
-      });
-      setTimeout(() => {
-        navigate("/dashboard"); 
-      }, 2000);
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: "Usuario o contraseña incorrectos.",
-        type: "error",
-      });
+        const response = await api.post('/login', form);
+        const { token, user } = response.data;
+        localStorage.setItem('token', token); 
+        localStorage.setItem('user', JSON.stringify(user)); 
+        navigate('/perros'); 
+    } catch (err) {
+        setErrors(err.response?.data?.message || 'Error al iniciar sesión');
     } finally {
-      setLoading(false); 
+        setLoading(false);
     }
-  };
+};
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });

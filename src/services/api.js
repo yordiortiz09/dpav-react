@@ -1,8 +1,48 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api', // Cambia a tu URL
+    baseURL: 'http://127.0.0.1:8000/api', // Cambia esto por tu URL base
 });
+
+export const fetchPerros = async (token) => {
+    try {
+        const response = await api.get('/perros', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data.perros;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Error al cargar los perros');
+    }
+};
+
+export const deletePerro = async (id, token) => {
+    await api.delete(`/perros/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+export const fetchRazas = async (token) => {
+    const response = await api.get('/razas', {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
+export const updateRaza = async (id, data, token) => {
+    await api.put(`/razas/${id}`, data, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+
 
 
 export default api;
