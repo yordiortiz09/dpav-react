@@ -93,7 +93,7 @@ const PerrosList = () => {
 
   const validateField = (name, value) => {
     let error = "";
-
+  
     switch (name) {
       case "nombre":
       case "color":
@@ -113,24 +113,56 @@ const PerrosList = () => {
       case "id_raza":
         if (!value) error = "La raza es obligatoria.";
         break;
+      case "fecha_nacimiento":
+        if (!value) error = "La fecha de nacimiento es obligatoria.";
+        break;
+      case "esterilizado":
+        if (!["Si", "No"].includes(value)) error = "El estado de esterilización es obligatorio.";
+        break;
       default:
         break;
     }
-
+  
     setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
-
-  const handleChangeEdit = (e) => {
-    const { name, value } = e.target;
-    setUpdatedData({ ...updatedData, [name]: value });
-    validateField(name, value);
-  };
-
+  
   const handleChangeCreate = (e) => {
     const { name, value } = e.target;
-    setNewPerroData({ ...newPerroData, [name]: value });
+    setNewPerroData((prevData) => ({ ...prevData, [name]: value }));
     validateField(name, value);
   };
+  
+  const handleChangeEdit = (e) => {
+    const { name, value } = e.target;
+    setUpdatedData((prevData) => ({ ...prevData, [name]: value }));
+    validateField(name, value);
+  };
+  
+
+  const isCreateDisabled = Object.values(errors).some((error) => error) || 
+                         !newPerroData.nombre || 
+                         !newPerroData.color || 
+                         !newPerroData.edad || 
+                         !newPerroData.sexo || 
+                         !newPerroData.peso || 
+                         !newPerroData.tamaño || 
+                         !newPerroData.altura || 
+                         !newPerroData.esterilizado || 
+                         !newPerroData.id_raza || 
+                         !newPerroData.fecha_nacimiento;
+
+const isEditDisabled = Object.values(errors).some((error) => error) || 
+                       !updatedData.nombre || 
+                       !updatedData.color || 
+                       !updatedData.edad || 
+                       !updatedData.sexo || 
+                       !updatedData.peso || 
+                       !updatedData.tamaño || 
+                       !updatedData.altura || 
+                       !updatedData.esterilizado || 
+                       !updatedData.id_raza || 
+                       !updatedData.fecha_nacimiento;
+
 
   const handleUpdate = async () => {
     try {
@@ -397,13 +429,19 @@ const PerrosList = () => {
       </Box>
     </DialogContent>
     <DialogActions>
-      <Button onClick={() => setOpenCreate(false)} color="error">
-        Cancelar
-      </Button>
-      <Button onClick={handleCreate} color="primary" variant="contained">
-        Crear
-      </Button>
-    </DialogActions>
+  <Button onClick={() => setOpenCreate(false)} color="error">
+    Cancelar
+  </Button>
+  <Button
+    onClick={handleCreate}
+    color="primary"
+    variant="contained"
+    disabled={isCreateDisabled}
+  >
+    Crear
+  </Button>
+</DialogActions>
+
   </Dialog>
 
   {/* Modal para Editar Perro */}
@@ -522,13 +560,19 @@ const PerrosList = () => {
       </Box>
     </DialogContent>
     <DialogActions>
-      <Button onClick={() => setOpenEdit(false)} color="error">
-        Cancelar
-      </Button>
-      <Button onClick={handleUpdate} color="primary" variant="contained">
-        Guardar
-      </Button>
-    </DialogActions>
+  <Button onClick={() => setOpenEdit(false)} color="error">
+    Cancelar
+  </Button>
+  <Button
+    onClick={handleUpdate}
+    color="primary"
+    variant="contained"
+    disabled={isEditDisabled}
+  >
+    Guardar
+  </Button>
+</DialogActions>
+
   </Dialog>
 </>
   );

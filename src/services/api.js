@@ -51,7 +51,15 @@ export const fetchRazas = async (token) => {
 };
 
 export const updateRaza = async (id, data, token) => {
-    await api.put(`/razas/${id}`, data, {
+    await api.put(`/actualizarRaza/${id}`, data, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+export const createRaza = async (data, token) => {
+    await api.post('/crearRaza', data, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
