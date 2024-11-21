@@ -151,15 +151,21 @@ const PerrosList = () => {
     try {
       const token = localStorage.getItem("token");
       await createPerro(newPerroData, token);
+  
       setSnackbar({ open: true, message: "Perro creado correctamente", type: "success" });
+  
       setOpenCreate(false);
+  
+      setNewPerroData({}); 
+  
       fetchData();
     } catch (err) {
       setSnackbar({ open: true, message: "Error al crear el perro", type: "error" });
       console.error(err);
-        console.error(err.response?.data);
+      console.error(err.response?.data);
     }
   };
+  
 
   const handleDelete = async (id) => {
     try {
@@ -169,6 +175,8 @@ const PerrosList = () => {
       fetchData();
     } catch (err) {
       setSnackbar({ open: true, message: "Error al eliminar el perro", type: "error" });
+        console.error(err); 
+        console.error(err.response?.data);
     }
   };
 
