@@ -15,7 +15,7 @@ const NavBar = () => {
         <AppBar position="fixed">
             <Toolbar>
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                    Mi App de Perros
+                    DPAV
                 </Typography>
                 <Box sx={{ display: 'flex', gap: '10px' }}>
                     <Button color="inherit" component={Link} to="/perros">

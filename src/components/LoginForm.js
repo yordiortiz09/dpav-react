@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -9,7 +9,7 @@ import {
   Avatar,
   Snackbar,
   Alert,
-  Link
+  Link,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -19,9 +19,17 @@ import api from "../services/api";
 const LoginForm = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false); 
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", type: "" }); 
+  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", type: "" });
   const navigate = useNavigate();
+
+  // Redirigir si el usuario ya inició sesión
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/perros"); // Redirige a la lista de perros si ya está autenticado
+    }
+  }, [navigate]);
 
   const validateField = (name, value) => {
     let error = "";
@@ -62,17 +70,19 @@ const LoginForm = () => {
     e.preventDefault();
     setLoading(true);
     try {
-        const response = await api.post('/login', form);
-        const { token, user } = response.data;
-        localStorage.setItem('token', token); 
-        localStorage.setItem('user', JSON.stringify(user)); 
-        navigate('/perros'); 
+      const response = await api.post("/login", form);
+      const { token, user } = response.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/perros"); // Redirige a la lista de perros tras iniciar sesión
     } catch (err) {
-        setErrors(err.response?.data?.message || 'Error al iniciar sesión');
+      const errorMessage =
+        err.response?.data?.message || "Error al iniciar sesión";
+      setSnackbar({ open: true, message: errorMessage, type: "error" });
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
@@ -153,11 +163,11 @@ const LoginForm = () => {
         <Divider sx={{ my: 2 }} />
         <Box textAlign="center">
           <Typography variant="body2">
-            ¿No tienes una cuenta?{' '}
+            ¿No tienes una cuenta?{" "}
             <Link
               component="button"
               variant="body2"
-              onClick={() => navigate('/register')} 
+              onClick={() => navigate("/register")}
             >
               Regístrate
             </Link>
@@ -165,14 +175,17 @@ const LoginForm = () => {
         </Box>
       </Paper>
 
-      {}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert onClose={handleCloseSnackbar} severity={snackbar.type} sx={{ width: "100%" }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.type}
+          sx={{ width: "100%" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>

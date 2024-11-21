@@ -18,12 +18,28 @@ export const fetchPerros = async (token) => {
 };
 
 export const deletePerro = async (id, token) => {
-    await api.delete(`/perros/${id}`, {
+    await api.delete(`/eliminarPerro/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     });
 };
+
+export const createPerro = async (data, token) => {
+    await api.post('/crearPerro', data, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
+export const updatePerro = async (id, data, token) => {
+    await api.put(`/actualizarPerro/${id}`, data, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
 
 export const fetchRazas = async (token) => {
     const response = await api.get('/razas', {
@@ -41,6 +57,8 @@ export const updateRaza = async (id, data, token) => {
         },
     });
 };
+
+
 
 
 
