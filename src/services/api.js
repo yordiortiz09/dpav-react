@@ -47,6 +47,7 @@ export const fetchRazas = async (token) => {
             Authorization: `Bearer ${token}`,
         },
     });
+ 
     return response.data;
 };
 
