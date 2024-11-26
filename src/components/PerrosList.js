@@ -71,9 +71,9 @@ const PerrosList = () => {
       setRazas(razasData);
 
       const perrosData = await fetchPerros(token);
-      console.log("Razas cargadas:", razasData);
-
       setPerros(perrosData);
+
+
       setFilteredPerros(perrosData);
       setRazas(razasData);
     } catch (err) {

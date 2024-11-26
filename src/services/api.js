@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api', // Cambia esto por tu URL base
+    baseURL: 'http://127.0.0.1:8000/api', 
 });
 
 export const fetchPerros = async (token) => {
@@ -11,6 +11,7 @@ export const fetchPerros = async (token) => {
                 Authorization: `Bearer ${token}`,
             },
         });
+        
         return response.data.perros;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Error al cargar los perros');
